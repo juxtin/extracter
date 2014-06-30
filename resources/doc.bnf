@@ -1,0 +1,17 @@
+<S> = Doc (<Code> | <CommentBlock> | Blank)*
+
+<CommentBlock> = Doc / Comment
+
+Doc = <#"\s*# "> Title (<Empty>? Section)+ <Empty>?
+
+Title = <#"Fact: "> #".*"
+Section = Heading Body
+Heading = <#"# "> #"[A-Z][a-z]+" <#":">
+Body = (CommentBlock | Comment* | <#" "> #".*") <Empty>
+<Comment> = <#"\s*"> <#"#"> <#"\s*"> #".*"
+
+
+
+<Code> = <#"\s*"> #"[^#]+" | Blank
+<Empty> = #"\s?" #"#+" #"\s?"
+<Blank> = #""
