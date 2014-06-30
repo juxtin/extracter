@@ -1,4 +1,4 @@
-<S> = Doc (<Code> | <CommentBlock> | Blank)*
+<S> = Doc (Doc | <Code> | <CommentBlock> | Blank)*
 
 <CommentBlock> = Doc / Comment
 
