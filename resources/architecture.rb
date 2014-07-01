@@ -11,6 +11,8 @@
 #
 # Caveats:
 #
+# Inline: Just some inline text.
+#
 
 require 'facter/util/architecture'
 

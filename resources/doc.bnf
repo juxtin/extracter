@@ -4,10 +4,10 @@
 Doc = Title <Empty> (Section <Empty>)+
 Title = <"# Fact: "> #".*" <'\n'>
 Section = Heading Body
-Heading = <"# "> #"\w*" <':\n'>
+Heading = <"# "> #"\w*" <':'> (<' '> Body)? <'\n'>
 Body = (BodyMain BodyContinued*)*
-BodyMain = <"#   "> #"[A-Z].*" <'\n'>
-BodyContinued = <"# "> #"[a-z].*" <'\n'>
+BodyMain = <"#   ">? #"[A-Z ].*" <'\n'>?
+BodyContinued = <"# "> #"[a-z].*" <'\n'>?
 
 
 Empty = #"^#\n" | #"\n"
