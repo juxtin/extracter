@@ -71,3 +71,4 @@ if Facter::Util::Blockdevices.available?
     end
   end
 end
+#

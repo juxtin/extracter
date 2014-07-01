@@ -1,18 +1,14 @@
-<S> = Docs (Doc | <Code> | <CommentBlock> | Blank)*
-
-<CommentBlock> = Doc / Comment
-
-Doc = <#"\s*# "> Title (<Empty>? Section)+ <Empty>?
-Docs = (Doc Doc Doc Doc) / (Doc Doc Doc) / (Doc Doc) / (Doc)
-
-Title = <#"Fact: "> #".*"
+(* Attempt 2 at the BNF description for inline fact docs *)
+<S> = Docs+ (Docs / <Code>)+
+<Docs> = (Doc <Empty>+)+
+Doc = Title <Empty> (Section <Empty>)+
+Title = <"# Fact: "> #".*" <'\n'>
 Section = Heading Body
-Heading = <#"# "> #"[A-Z][a-z]+" <#":">
-Body = (CommentBlock | Comment* | <#" "> #".*") <Empty>
-<Comment> = <#"\s*"> <#"#"> <#"\s*"> #".*"
+Heading = <"# "> #"\w*" <':\n'>
+Body = (BodyMain BodyContinued*)*
+BodyMain = <"#   "> #"[A-Z].*" <'\n'>
+BodyContinued = <"# "> #"[a-z].*" <'\n'>
 
 
-
-<Code> = <#"\s*"> #"[^#]+" | Blank
-<Empty> = #"\s?" #"#+" #"\s?"
-<Blank> = #""
+Empty = #"^#\n" | #"\n"
+Code = #".*" | Empty | "" | #"#.*"

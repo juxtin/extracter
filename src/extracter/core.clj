@@ -4,7 +4,7 @@
             [clojure.java.io :as io]
             [clojure.string :as s]))
 
-(def parse (insta/parser (io/resource "doc2.bnf")))
+(def parse (insta/parser (io/resource "doc.bnf")))
 
 (defn parse-resource
   [^String path]
@@ -13,8 +13,8 @@
 
 (def transformations
   {:BodyContinued str
-   :BodyMain (partial str "* ")
-   :Body (fn [& lines] {:body (s/join " " lines)})
+   :BodyMain str
+   :Body (fn [& lines] {:body (vec lines)})
    :Heading (fn [title] {:heading title})
    :Section merge
    :Title str
@@ -27,8 +27,7 @@
     (insta/transform transformations parse-tree)))
 
 (comment
-(defn retry
-  [path]
-  (with-redefs [parse (insta/parser (io/resource "doc2.bnf"))]
-    (pprint (parse-resource path))))
+(defn res [path]
+  (slurp (io/reader (io/resource path))))
+
   )
