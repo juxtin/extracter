@@ -4,7 +4,7 @@
 Doc = Title <Empty> (Section <Empty>)+
 Title = <"# Fact: "> #".*" <'\n'>
 Section = Heading Body
-Heading = <"# "> #"\w*" <':'> (<' '> Body)? <'\n'>
+Heading = <"# "> #"\w*" <':'> (<' '> | <'\n'>)
 Body = (BodyMain BodyContinued*)*
 BodyMain = <"#   ">? #"[A-Z ].*" <'\n'>?
 BodyContinued = <"# "> #"[a-z].*" <'\n'>?
