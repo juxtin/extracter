@@ -26,7 +26,7 @@
 
 (comment
 (defn retry
-  []
+  [path]
   (with-redefs [parse (insta/parser (io/resource "doc.bnf"))]
-    (pprint (parse-resource "blockdevices.rb"))))
+    (pprint (parse-resource path))))
   )
