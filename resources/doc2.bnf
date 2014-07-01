@@ -1,5 +1,5 @@
 (* Attempt 2 at the BNF description for inline fact docs *)
-<S> = Docs <Code>+
+<S> = Docs+ (Docs / <Code>)+
 Docs = (Doc <Empty>+)+
 Doc = Title <Empty> (Section <Empty>)+
 Title = <"# Fact: "> #".*" <'\n'>
