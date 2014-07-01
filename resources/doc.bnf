@@ -3,7 +3,7 @@
 <CommentBlock> = Doc / Comment
 
 Doc = <#"\s*# "> Title (<Empty>? Section)+ <Empty>?
-Docs = (Doc Doc Doc) / (Doc Doc) / (Doc)
+Docs = (Doc Doc Doc Doc) / (Doc Doc Doc) / (Doc Doc) / (Doc)
 
 Title = <#"Fact: "> #".*"
 Section = Heading Body
