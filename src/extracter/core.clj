@@ -1,7 +1,8 @@
 (ns extracter.core
   (:use [clojure.pprint])
   (:require [instaparse.core :as insta]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io]
+            [clojure.string :as s]))
 
 (def parse (insta/parser (io/resource "doc.bnf")))
 
@@ -10,7 +11,22 @@
   (let [rdr (io/reader (io/resource path))]
     (parse (slurp rdr))))
 
+(def transformations
+  {:Body (fn [& lines] {:body (s/join " " lines)})
+   :Heading (fn [title] {:heading title})
+   :Section merge
+   :Title str
+   :Doc (fn [title & maps] {:title title :sections (vec maps)})
+   :Docs (fn [& facts] {:facts (vec facts)})})
+
+(defn transform-resource
+  [^String path]
+  (let [parse-tree (parse-resource path)]
+    (insta/transform transformations parse-tree)))
+
+(comment
 (defn retry
   []
   (with-redefs [parse (insta/parser (io/resource "doc.bnf"))]
     (pprint (parse-resource "blockdevices.rb"))))
+  )

@@ -1,8 +1,17 @@
-<S> = Doc (Doc | <Code> | <CommentBlock> | Blank)*
+<S> = Docs (<Code> | <CommentBlock> | Blank)*
 
 <CommentBlock> = Doc / Comment
 
-Doc = <#"\s*# "> Title (<Empty>? Section)+ <Empty>?
+Doc = (<#"\s*# "> Title (<Empty>? Section)+ <Empty>?)
+
+(* Wow, this is awful. I know what you're thinking--
+"Why not just use `Doc*`?"
+Glad you asked. That rule refuses to match more than one Doc
+nonterminal. What about `Doc+`? Same thing. Even `Doc Doc?`
+only matches one. The following hack works for < 6, anyway. 
+
+The right-recursive version also fails.*)
+Docs = (Doc Doc Doc Doc Doc) / (Doc Doc Doc Doc) / (Doc Doc Doc) / (Doc Doc) / Doc
 
 Title = <#"Fact: "> #".*"
 Section = Heading Body
