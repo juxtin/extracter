@@ -1,0 +1,3 @@
+[submodule "facter"]
+	path = facter
+	url = https://github.com/puppetlabs/facter.git
