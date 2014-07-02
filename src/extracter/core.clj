@@ -14,8 +14,8 @@
 (def transformations
   {:BodyContinued str
    :BodyMain str
-   :Body (fn [& lines] {:body (vec lines)})
-   :Heading (fn [title] {:heading title})
+   :Body (fn body [& lines] {:body (vec lines)})
+   :Heading (fn heading [title] {:heading title})
    :Section merge
    :Title str
    :Doc (fn [title & maps] {:title title :sections (vec maps)})
@@ -29,5 +29,9 @@
 (comment
 (defn res [path]
   (slurp (io/reader (io/resource path))))
+
+(defn retry []
+  (with-redefs [parse (insta/parser (io/reader (io/resource "doc.bnf")))]
+    (pprint (parse-resource "blockdevices.rb"))))
 
   )

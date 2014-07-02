@@ -1,4 +1,3 @@
-(* Attempt 2 at the BNF description for inline fact docs *)
 <S> = Docs+ (Docs / <Code>)+
 <Docs> = (Doc <Empty>+)+
 Doc = Title <Empty> (Section <Empty>)+
@@ -7,7 +6,7 @@ Section = Heading Body
 Heading = <"# "> #"\w*" <':'> (<' '> | <'\n'>)
 Body = (BodyMain BodyContinued*)*
 BodyMain = <"#   ">? #"[A-Z ].*" <'\n'>?
-BodyContinued = <"# "> #"[a-z].*" <'\n'>?
+<BodyContinued> = <"# "> #"[a-z].*" <'\n'>?
 
 
 Empty = #"^#\n" | #"\n"
