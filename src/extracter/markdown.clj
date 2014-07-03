@@ -1,9 +1,19 @@
 (ns extracter.markdown
   (:require [clojure.string :as s]))
 
+(defn bullet
+  "Given a collection of strings (assumed to be the body of a section),
+  turn them into a markdown bulleted list if that list would have more
+  than one item. Otherwise, return the body unchanged."
+  [body]
+  (if (>= (count body) 2)
+    (mapv (partial str "* ") body)
+    body))
+
 (defn section->md
   [{:keys [body heading]}]
-  (vec (concat [(format "**%s**:" heading) ""] [body ""])))
+  (when (not (empty? body))
+    [(format "**%s**:" heading) "" (bullet body) ""]))
 
 (defn title->md
   [title]
