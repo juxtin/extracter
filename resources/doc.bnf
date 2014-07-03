@@ -10,7 +10,7 @@ Heading = <"# "> #"\w*" <':'> (<' '> | <'\n'>)
 Body = BodySection*
 BodySection = BodyMain (BodyContinued | <Empty>)*
 <BodyMain> = <"#   ">? #"[A-Z ].*" <'\n'>?
-<BodyContinued> = <"# "> <"  ">? #"[a-z].*" <'\n'>?
+<BodyContinued> = <"# "> <"  ">? #"[a-z'`\"].*" <'\n'>?
 
 Empty = #"^#\n" | #"\n"
 Code = #".*" | Empty | "" | #"#.*"
