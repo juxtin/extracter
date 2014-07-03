@@ -9,6 +9,19 @@
 
 (def parse (insta/parser (io/resource "doc.bnf")))
 
+(defn code?
+  [s]
+  (re-find #"^[^#]" s))
+
+(defn slurp-comments
+  "Given an instance of java.io.File, return a string containing all of the comments until the code begins."
+  [^java.io.File f]
+  (->> f
+       io/reader
+       line-seq
+       (take-while (complement code?))
+       (s/join "\n")))
+
 (defn parse-resource
   [^String path]
   (let [rdr (io/reader (io/resource path))]
@@ -41,7 +54,9 @@
   [^String path]
   (->> path
        files/facts-in-dir
-       (pmap transform-file)
+       (map slurp-comments)
+       (pmap parse)
+       (map (partial insta/transform transformations))
        flatten))
 
 (defn path->md
