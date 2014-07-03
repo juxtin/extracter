@@ -1,8 +1,11 @@
 (ns extracter.core
   (:use [clojure.pprint])
   (:require [instaparse.core :as insta]
+            [extracter.markdown :as md]
             [clojure.java.io :as io]
-            [clojure.string :as s]))
+            [extracter.files :as files]
+            [clojure.string :as s]
+            [cheshire.core :as json]))
 
 (def parse (insta/parser (io/resource "doc.bnf")))
 
@@ -14,6 +17,7 @@
 (def transformations
   {:BodyContinued str
    :BodyMain str
+   :BodySection (fn [& sections] (s/join " " sections))
    :Body (fn body [& lines] {:body (vec lines)})
    :Heading (fn heading [title] {:heading title})
    :Section merge
@@ -25,6 +29,25 @@
   [^String path]
   (let [parse-tree (parse-resource path)]
     (insta/transform transformations parse-tree)))
+
+(defn transform-file
+  [^java.io.File f]
+  (let [parse-tree (parse (slurp f))]
+    (insta/transform transformations parse-tree)))
+
+(defn transform-facts-in-dir
+  "Recursively scans the path for files containing documented facts.
+   Parses and transforms the fact docs and returns them as a vector of maps."
+  [^String path]
+  (->> path
+       files/facts-in-dir
+       (pmap transform-file)
+       flatten))
+
+(defn path->md
+  [^String path ^String fout-path]
+  (let [facts (transform-facts-in-dir path)]
+    (md/facts->file facts fout-path)))
 
 (comment
 (defn res [path]
