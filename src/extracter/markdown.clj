@@ -1,6 +1,12 @@
 (ns extracter.markdown
   (:require [clojure.string :as s]))
 
+(defn html-escape
+  [md]
+  (s/escape md {\> "&gt;"
+                \< "&lt;"
+                \& "&amp;"}))
+
 (defn bullet
   "Given a collection of strings (assumed to be the body of a section),
   turn them into a markdown bulleted list if that list would have more
@@ -10,10 +16,16 @@
     (mapv (partial str "* ") body)
     body))
 
+(defn body-preprocess
+  [body]
+  (->> body
+       (map html-escape)
+       bullet))
+
 (defn section->md
   [{:keys [body heading]}]
   (when (not (empty? body))
-    [(format "**%s**:" heading) "" (bullet body) ""]))
+    [(format "**%s**:" heading) "" (body-preprocess body) ""]))
 
 (defn title->md
   [title]
