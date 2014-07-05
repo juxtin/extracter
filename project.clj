@@ -7,4 +7,5 @@
   :profiles {:uberjar {:aot :all}}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [cheshire "5.3.1"]
+                 [org.clojure/tools.cli "0.3.1"]
                  [instaparse "1.3.2"]])

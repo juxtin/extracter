@@ -3,10 +3,11 @@
   (:use [clojure.pprint])
   (:require [instaparse.core :as insta]
             [extracter.markdown :as md]
+            [extracter.json :as json]
             [clojure.java.io :as io]
             [extracter.files :as files]
             [clojure.string :as s]
-            [cheshire.core :as json]))
+            [clojure.tools.cli :as cli]))
 
 (def parse (insta/parser (io/resource "doc.bnf")))
 
@@ -65,9 +66,41 @@
   (let [facts (transform-facts-in-dir path)]
     (md/facts->file facts fout-path)))
 
+(def cli-options
+  [["-o" "--out FILE" "The path to the output file"
+    :default "docs.{md,json}"]
+   ["-i" "--in PATH" "A path containing facts"
+    :default "facter/lib/facter"]
+   ["-m" "--markdown" "Output markdown"
+    :default true
+    :flag true]
+   ["-j" "--json" "Output JSON"
+    :default false
+    :flag true]
+   ["-h" "--help"]])
+
+(defn run-markdown
+  [path output]
+  (if (= output "docs.{md,json}")
+    (run-markdown path "docs.md")
+    (do (println "Scanning" path "for facts. Will output markdown to" output)
+        (path->md path output))))
+
+(defn run-json
+  [path output]
+  (if (= output "docs.{md,json}")
+    (run-json path "docs.json")
+    (do (println "Scanning" path "for facts. Will output JSON to" output)
+        (->> path
+             transform-facts-in-dir
+             json/pretty-encode
+             (spit output)))))
+
 (defn -main
   [& args]
-  (let [path (first args)
-        output (second args)]
-    (println "Scanning" path "for facts. Will output to" output)
-    (path->md path output)))
+  (let [{:keys [help in out markdown json] :as opts} (:options (cli/parse-opts args cli-options))]
+    (if help
+      (pprint (:summary opts))
+      (cond
+        json (run-json in out)
+        markdown (run-markdown in out)))))
