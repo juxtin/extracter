@@ -98,9 +98,9 @@
 
 (defn -main
   [& args]
-  (let [{:keys [help in out markdown json] :as opts} (:options (cli/parse-opts args cli-options))]
-    (if help
-      (pprint (:summary opts))
-      (cond
-        json (run-json in out)
-        markdown (run-markdown in out)))))
+  (let [opts (cli/parse-opts args cli-options)
+        {:keys [help in out markdown json]} (:options opts)]
+    (cond
+     help (print (:summary opts))
+     json (run-json in out)
+     markdown (run-markdown in out))))
