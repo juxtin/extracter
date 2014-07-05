@@ -1,4 +1,5 @@
 (ns extracter.files
+  (:refer-clojure :exclude [contains?])
   (:require [clojure.java.io :as io]))
 
 (defn contains?
