@@ -1,4 +1,5 @@
 (ns extracter.core
+  (:gen-class)
   (:use [clojure.pprint])
   (:require [instaparse.core :as insta]
             [extracter.markdown :as md]
@@ -64,12 +65,9 @@
   (let [facts (transform-facts-in-dir path)]
     (md/facts->file facts fout-path)))
 
-(comment
-(defn res [path]
-  (slurp (io/reader (io/resource path))))
-
-(defn retry []
-  (with-redefs [parse (insta/parser (io/reader (io/resource "doc.bnf")))]
-    (pprint (parse-resource "blockdevices.rb"))))
-
-  )
+(defn -main
+  [& args]
+  (let [path (first args)
+        output (second args)]
+    (println "Scanning" path "for facts. Will output to" output)
+    (path->md path output)))
