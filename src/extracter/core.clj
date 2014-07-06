@@ -77,7 +77,7 @@
    ["-j" "--json" "Output JSON"
     :default false
     :flag true]
-   ["-h" "--help"]])
+   ["-u" "--usage" "Print this help message"]]) ;; lein run -h shadows "help"
 
 (defn run-markdown
   [path output]
@@ -99,8 +99,8 @@
 (defn -main
   [& args]
   (let [opts (cli/parse-opts args cli-options)
-        {:keys [help in out markdown json]} (:options opts)]
+        {:keys [usage in out markdown json]} (:options opts)]
     (cond
-     help (print (:summary opts))
+     usage (print (:summary opts))
      json (run-json in out)
      markdown (run-markdown in out))))
