@@ -4,12 +4,20 @@
   (:require [instaparse.core :as insta]
             [extracter.markdown :as md]
             [extracter.json :as json]
+            [extracter.audit :as audit]
             [clojure.java.io :as io]
             [extracter.files :as files]
             [clojure.string :as s]
             [clojure.tools.cli :as cli]))
 
-(def parse (insta/parser (io/resource "doc.bnf")))
+(def doc-parser (insta/parser (io/resource "doc.bnf")))
+
+(defn parse
+  "Parse x (file or string) using the CFG for comment docs. If the result is nil, log that."
+  [x]
+  (if-let [result (doc-parser x)]
+    result
+    (println "Error while parsing:" x)))
 
 (defn code?
   [s]
@@ -22,6 +30,7 @@
        io/reader
        line-seq
        (take-while (complement code?))
+       (map s/trimr)
        (s/join "\n")))
 
 (def transformations
@@ -94,4 +103,6 @@
     (cond
      usage (print (:summary opts))
      json (run-json in out)
-     markdown (run-markdown in out))))
+     markdown (run-markdown in out))
+    (println "Completed run. Beginning audit.")
+    (audit/find-missing in (transform-facts-in-dir in)))) ;; this is not optimal!
