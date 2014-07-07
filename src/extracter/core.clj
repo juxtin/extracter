@@ -24,11 +24,6 @@
        (take-while (complement code?))
        (s/join "\n")))
 
-(defn parse-resource
-  [^String path]
-  (let [rdr (io/reader (io/resource path))]
-    (parse (slurp rdr))))
-
 (def transformations
   {:BodyContinued str
    :BodyMain str
@@ -40,14 +35,10 @@
    :Doc (fn [title & maps] {:title title :sections (vec maps)})
    :Docs (fn [& facts] {:facts (vec facts)})})
 
-(defn transform-resource
-  [^String path]
-  (let [parse-tree (parse-resource path)]
-    (insta/transform transformations parse-tree)))
-
 (defn transform-file
   [^java.io.File f]
-  (let [parse-tree (parse (slurp f))]
+  {:pre [(files/fact? f)]}
+  (let [parse-tree (parse (slurp-comments f))]
     (insta/transform transformations parse-tree)))
 
 (defn transform-facts-in-dir
