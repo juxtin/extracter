@@ -67,10 +67,8 @@
     (md/facts->file facts fout-path)))
 
 (def cli-options
-  [["-o" "--out FILE" "The path to the output file"
-    :default "docs.{md,json}"]
-   ["-i" "--in PATH" "A path containing facts"
-    :default "facter/lib/facter"]
+  [["-o" "--out FILE" "The path to the output file"]
+   ["-i" "--in PATH" "A path containing facts"]
    ["-m" "--markdown" "Output markdown"
     :default true
     :flag true]
@@ -80,29 +78,28 @@
    ["-u" "--usage" "Print this help message"]]) ;; lein run -h shadows "help"
 
 (defn run-markdown
-  [path output]
-  (if (= output "docs.{md,json}")
-    (run-markdown path "docs.md")
-    (do (println "Scanning" path "for facts. Will output markdown to" output)
-        (path->md path output))))
+  [results output]
+  (do (println "Outputting markdown to:" output)
+      (md/facts->file results output)))
 
 (defn run-json
-  [path output]
-  (if (= output "docs.{md,json}")
-    (run-json path "docs.json")
-    (do (println "Scanning" path "for facts. Will output JSON to" output)
-        (->> path
-             transform-facts-in-dir
-             json/pretty-encode
-             (spit output)))))
+  [results output]
+  (println "Outputting JSON to:" output)
+  (->> results
+       json/pretty-encode
+       (spit output)))
 
 (defn -main
   [& args]
   (let [opts (cli/parse-opts args cli-options)
         {:keys [usage in out markdown json]} (:options opts)]
-    (cond
-     usage (print (:summary opts))
-     json (run-json in out)
-     markdown (run-markdown in out))
-    (println "Completed run. Beginning audit.")
-    (audit/find-missing in (transform-facts-in-dir in)))) ;; this is not optimal!
+    (if (and in out (or markdown json)) ;; if the input is sufficient
+      (do
+        (println "Processing files in:" in)
+        (let [results (transform-facts-in-dir in)]
+          (cond
+           json (run-json results out)
+           markdown (run-markdown results out))
+          (println "Completed run. Auditing...")
+          (audit/find-missing in results)))
+      (print (:summary opts))))) ;; if there's no clear directive, print usage info
