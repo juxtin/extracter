@@ -25,7 +25,8 @@
   "Given a path and a results set, return a list of facts that appear to be documented but are not in the results."
   [^String path results]
   (let [actual (set (map :title results))
-        expected (likely-facts-in-dir path)]
-    (if-let [missing (set/difference expected actual)]
-      (println "Missing from results:" (s/join ", " missing))
-      (println "Audit passed. All documented facts are present in the output."))))
+        expected (likely-facts-in-dir path)
+        missing (set/difference expected actual)]
+    (if (empty? missing)
+        (println "Audit passed. All documented facts are present in the output.")
+        (println "Missing from results:" (s/join ", " missing)))))
