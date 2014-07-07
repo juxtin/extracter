@@ -1,12 +1,16 @@
 (ns extracter.markdown
-  (:require [clojure.string :as s]))
+  (:require [clojure.string :as s]
+            [clojure.core.typed :refer [ann cf U Fn Any HVec Value Vec Keyword Seq HMap Map] :as t]))
 
+(ann ^:no-check clojure.string/escape [String (HMap (Value Any) String) -> String])
+(ann html-escape [String -> String])
 (defn html-escape
   [md]
   (s/escape md {\> "&gt;"
                 \< "&lt;"
                 \& "&amp;"}))
 
+(ann bullet [(Seq String) -> (Vec String)])
 (defn bullet
   "Given a collection of strings (assumed to be the body of a section),
   turn them into a markdown bulleted list if that list would have more
