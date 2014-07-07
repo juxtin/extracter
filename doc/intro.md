@@ -1,3 +1,1 @@
-# Introduction to extracter
-
-TODO: write [great documentation](http://jacobian.org/writing/great-documentation/what-to-write/)
+See [README](../README.md).
