@@ -28,7 +28,9 @@
      json (json/run results out)
      markdown (md/run results out))
     (println "Completed run. Auditing...")
-    (audit/find-missing in results)))
+    (if (audit/find-missing in results)
+      (System/exit 1)
+      (System/exit 0))))
 
 (defn -main
   [& args]

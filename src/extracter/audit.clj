@@ -22,11 +22,12 @@
        set))
 
 (defn find-missing
-  "Given a path and a results set, return a list of facts that appear to be documented but are not in the results."
+  "Given a path and a results set, print a list of facts that appear to be documented but are not in the results.
+  Returns true if there are any missing facts, false otherwise."
   [^String path results]
   (let [actual (set (map :title results))
         expected (likely-facts-in-dir path)
         missing (set/difference expected actual)]
     (if (empty? missing)
-        (println "Audit passed. All documented facts are present in the output.")
-        (println "Missing from results:" (s/join ", " missing)))))
+      (do (println "Audit passed. All documented facts are present in the output.") false)
+      (do (println "Missing from results:" (s/join ", " missing)) true))))
