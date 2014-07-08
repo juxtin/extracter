@@ -41,3 +41,8 @@
        flatten
        (s/join "\r\n")
        (spit path)))
+
+(defn run
+  [results output]
+  (do (println "Outputting markdown to:" output)
+      (facts->file results output)))
