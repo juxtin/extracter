@@ -45,6 +45,7 @@
    :Docs (fn [& facts] {:facts (vec facts)})})
 
 (defn transform-file
+  "Given an instance of java.io.File, parse and transform it. Returns a vector of hash-maps."
   [^java.io.File f]
   {:pre [(files/fact? f)]}
   (let [parse-tree (parse (slurp-comments f))]
@@ -61,11 +62,6 @@
        (map (partial insta/transform transformations))
        flatten
        (filter :title))) ;; we don't want "facts" with nil values
-
-(defn path->md
-  [^String path ^String fout-path]
-  (let [facts (transform-facts-in-dir path)]
-    (md/facts->file facts fout-path)))
 
 (def cli-options
   [["-o" "--out FILE" "The path to the output file"]
