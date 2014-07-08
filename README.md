@@ -18,7 +18,7 @@ To parse the facts from `facter/lib/facter` and output json to `facts.json`:
 
     lein run -i facter/lib/facter --json -o facts.json
 
-## Limitations and Caveats
+## The Comment Docs Format
 
 Extracter has pretty high expectations for the format of the comment docs. Essentially, it expects any number of documentation blocks in the following format to occur in a file *before anything else*:
 
@@ -41,6 +41,22 @@ Extracter has pretty high expectations for the format of the comment docs. Essen
     #
 
 The parser is about as forgiving as I could make it, but it's best to follow the above format as closely as possible.
+
+## Auditing
+
+After generating the output, the parser checks to see whether all the facts it expected to be there are actually there. It does this by scanning the input directory for lines in the following format:
+
+    # Fact: fact_name
+
+And cross-referencing all of the `fact_name`s with the parser's output. If anything is missing, it'll call those out at the end. If you use the Facter commit that's submoduled into this repository then you shouldn't see any examples of missing facts, but this extra step should help you figure out if there are any facts whose docs are present, but incorrectly formatted.
+
+There's a big caveat here, though: auditing only guarantees that the _name_ of the fact appears in the final output; not that the rest of it looks the way it's supposed to. There could still be missing sections or subsections, just to name a couple of likely issues. You should never use extracter's output without reading over it first for obvious errors.
+
+## TODO
+
+- [ ] The tests in this repo are massively out of date.
+- [ ] The output should contain at least one fact.
+- [ ] The initial scan for facts should cast a broader net. As it is, facts with a malformed "Fact: factname" declaration will probably slip by unnoticed.
 
 ## License
 
