@@ -9,7 +9,7 @@
   [^java.io.File f]
   (->> f
        slurp
-       (re-seq #"Fact: ([\w_<>#]*)")
+       (re-seq #"[Ff]act: ([\w_<># ]*)")
        (mapcat rest)))
 
 (defn likely-facts-in-dir
