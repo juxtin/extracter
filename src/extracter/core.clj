@@ -59,7 +59,8 @@
        (map slurp-comments)
        (pmap parse)
        (map (partial insta/transform transformations))
-       flatten))
+       flatten
+       (filter :title))) ;; we don't want "facts" with nil values
 
 (defn path->md
   [^String path ^String fout-path]
