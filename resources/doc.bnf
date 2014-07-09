@@ -1,16 +1,17 @@
-<S> = Docs+ (Docs / <Code>)+
+<S> = Docs+ (Doc / <Code>)+
 
 <Docs> = (Doc <Empty>+)+
-Doc = Title <Empty> (Section <Empty>)+
+Doc = Title <EmptyComment> (Section)+ 
 
 Title = <"# Fact: "> #".*" <'\n'>
 Section = Heading Body
 Heading = <"# "> #"\w*" <':'> (<' '> | <'\n'>)
 
 Body = BodySection*
-BodySection = BodyMain (BodyContinued | <Empty>)*
+BodySection = BodyMain (BodyContinued | <EmptyComment>)*
 <BodyMain> = <"#   ">? #"[A-Z ].*" <'\n'>?
 <BodyContinued> = <"# "> <"  ">? #"[a-z'`\"].*" <'\n'>?
 
-Empty = #"^#\n" | #"\n"
-Code = #".*" | Empty | "" | #"#.*"
+Empty = #"\n"
+EmptyComment = #"^#\n"
+Code = #".*" | Empty | "" | #"#.*" | Epsilon
