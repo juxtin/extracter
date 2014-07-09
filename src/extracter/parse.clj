@@ -7,11 +7,11 @@
 (def doc-parser (insta/parser (io/resource "doc.bnf")))
 
 (defn parse
-  "Parse x (file or string) using the CFG for comment docs. If the result is nil, log that."
-  [x]
-  (if-let [result (doc-parser x)]
+  "Parse s using the CFG for comment docs. If the result is nil, log that."
+  [^String s]
+  (if-let [result (doc-parser s)]
     result
-    (println "Error while parsing:" x)))
+    (println "Error while parsing:" s)))
 
 (defn code?
   [s]
@@ -51,8 +51,6 @@
   [^String path]
   (->> path
        files/facts-in-dir
-       (map slurp-comments)
-       (pmap parse)
-       (map (partial insta/transform transformations))
+       (pmap (comp (partial insta/transform transformations) parse slurp-comments))
        flatten
        (filter :title))) ;; we don't want "facts" with nil values
