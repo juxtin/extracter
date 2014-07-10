@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/holguinj/extracter.svg?branch=ci)](https://travis-ci.org/holguinj/extracter)
+[![Build Status](https://travis-ci.org/holguinj/extracter.svg?branch=master)](https://travis-ci.org/holguinj/extracter)
 
 # extracter
 
