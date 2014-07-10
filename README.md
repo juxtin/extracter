@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/holguinj/extracter.svg?branch=ci)](https://travis-ci.org/holguinj/extracter)
+
 # extracter
 
 A CLI tool that extracts comment docs from [Facter](http://docs.puppetlabs.com/facter) facts. This is incredibly useful if you happen to work on the documentation team at [Puppet Labs](http://puppetlabs.com).
