@@ -20,7 +20,7 @@
 
 (defn run
   "Parse the input file and process the results with the right helper.
-  After that, begin the audit."
+  After that, run the audit and exit 0 if the audit passes."
   [in out markdown json]
   (println "Processing files in:" in)
   (let [results (parse/transform-facts-in-dir in)]
@@ -28,9 +28,9 @@
      json (json/run results out)
      markdown (md/run results out))
     (println "Completed run. Auditing...")
-    (if (audit/find-missing in results)
-      (System/exit 1)
-      (System/exit 0))))
+    (if (audit/audit in results)
+      (System/exit 0)
+      (System/exit 1))))
 
 (defn -main
   [& args]

@@ -24,13 +24,29 @@
        (mapcat fact-names)
        set))
 
-(defn find-missing
-  "Given a path and a results set, print a list of facts that appear to be documented but are not in the results.
-  Returns true if there are any missing facts, false otherwise."
+(defn fail-audit
+  [actual expected]
+  (let [missing (set/difference expected actual)
+        extra (set/difference actual expected)]
+    (println "Audit failed!")
+    (when (empty? actual)
+      (println "No facts were documented!"))
+    (when (seq missing)
+      (println "These facts appear to be documented, but are missing from the results:" (s/join ", " missing)))
+    (when (seq extra)
+      (println "These facts appear in the results, but I couldn't find their documentation:" (s/join ", " extra))))
+  false)
+
+(defn audit
+  "Given a path and a results set, run the following audit checks: 
+     1. Check that the output contains at least one fact.
+     2. Look for facts that appear to have documentation, but don't appear in the output. 
+     3. Look for facts that do appear in the output, but have no documentation in the source.
+  All three checks will run, even if the first one or two fail. Returns true if all three pass,
+  false otherwise."
   [^String path results]
   (let [actual (set (map :title results))
-        expected (likely-facts-in-dir path)
-        missing (set/difference expected actual)]
-    (if (empty? missing)
-      (do (println "Audit passed. All documented facts are present in the output.") false)
-      (do (println "Missing from results:" (s/join ", " missing)) true))))
+        expected (likely-facts-in-dir path)]
+    (if
+     (= actual expected) (do (println "Audit passed. All documented facts are present in the output and there are no unexpected facts.") true)
+     (fail-audit actual expected))))

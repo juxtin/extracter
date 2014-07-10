@@ -55,8 +55,8 @@ There's a big caveat here, though: auditing only guarantees that the _name_ of t
 ## TODO
 
 - [ ] The tests in this repo are massively out of date.
-- [ ] The output should contain at least one fact.
-- [ ] The initial scan for facts should cast a broader net. As it is, facts with a malformed "Fact: factname" declaration will probably slip by unnoticed.
+- [x] The output should contain at least one fact. (Done: this is part of the audit now)
+- [x] The initial scan for facts should cast a broader net. As it is, facts with a malformed "Fact: factname" declaration will probably slip by unnoticed. (Done: this scan is now about as aggressive as it reasonably could be)
 
 ## License
 

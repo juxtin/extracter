@@ -11,6 +11,7 @@
     body))
 
 (defn body-preprocess
+  "Apply any necessary pre-processing functions to a body vector."
   [body]
   (->> body ;; this is structured lke this for historical reasons
        bullet))
