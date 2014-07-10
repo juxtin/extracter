@@ -5,19 +5,22 @@
             [clojure.java.io :as io]))
 
 (defn fact-names
-  "Given a java.io.File object containing one or more documented facts, return the names of those facts."
+  "Given a java.io.File object containing one or more (possibly malformed) documented facts, return the
+  names of those facts."
   [^java.io.File f]
   (->> f
        slurp
-       (re-seq #"[Ff]act: ([\w_<># ]*)")
-       (mapcat rest)))
+       (re-seq #"[Ff]act:[ ]+(.*)\n")
+       (map second)))
 
 (defn likely-facts-in-dir
-  "Recursively scans a directory for documented facts and returns the names
-   of any facts found. Relies on the '# Fact: x' convention."
+  "Recursively scans a directory for documented facts and returns a set of the names of any facts found. 
+  Relies on the 'Fact: x' convention, but applied much more loosely than the main parsing function."
   [^String path]
   (->> path
-       files/facts-in-dir
+       io/file
+       file-seq
+       (filter files/ruby-file?)
        (mapcat fact-names)
        set))
 
