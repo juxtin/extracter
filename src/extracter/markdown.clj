@@ -17,7 +17,7 @@
 
 (defn section->md
   [{:keys [body heading]}]
-  (when (not (empty? body))
+  (when (seq body)
     [(format "**%s**:" heading) "" (body-preprocess body) ""]))
 
 (defn title->md
