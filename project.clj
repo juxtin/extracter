@@ -1,4 +1,4 @@
-(defproject extracter "0.1.0-SNAPSHOT"
+(defproject extracter "0.1.0"
   :description "Extract core fact documentation from the Facter source."
   :url "http://github.com/holguinj/extracter"
   :license {:name "Eclipse Public License"
